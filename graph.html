@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script>
+window.onload = function () {
+
+var dps = []; // dataPoints
+var chart = new CanvasJS.Chart("chartContainer", {
+	title :{
+		text: "ARRIVAL RATE"
+    },
+    axisX: {
+        title: "Time"
+    },
+    axisY: {
+        title: "No of request"
+    },
+	data: [{
+		type: "line",
+		dataPoints: dps
+	}]
+});
+
+
+var updateInterval = 3000;
+
+
+var updateChart = function (count) {
+var d = new Date();
+var tree= new Date(d.getTime() - 60000 *3);
+length = length || 1;
+    $.get(`http://localhost:8080/company/arrival_rate?queue_id=QUEUE01001&from=${tree.toISOString()}&duration=3`, 
+    function (data, status) {
+var final=[];
+for (let index = 0; index < data.length; index++) {
+   final.push({
+       x: data[index].timestamp,
+       y: parseInt(data[index].count)
+   })
+    console.log(data[index].timestamp);
+}
+
+dps.splice(0, dps.length, ...final);
+chart.render();
+
+    })
+};
+
+updateChart();
+setInterval(function(){updateChart()}, updateInterval);
+
+}
+</script>
+</head>
+<body>
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</body>
+</html>

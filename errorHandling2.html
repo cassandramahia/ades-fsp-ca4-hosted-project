@@ -2,6 +2,7 @@
 <html>
 <head>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
 
 
@@ -76,6 +77,10 @@ function validateForm()  {
 
     <div class="col">Column 1
       <body>
+
+        <h4>KOMPANY:</h4>
+        <input id="field" type="text" name="fname"  maxlength="10">
+        <button type="button" onclick="clickpress()">Click Me!</button>
         <form name="myForm" onsubmit="return validateForm()">
           CompanyId: <input type="text" name="fname" minlength="9" maxlength="9">
           <input type="submit" value="Search">
@@ -155,7 +160,18 @@ function validateForm()  {
        div.innerText = "This is a paragraph.";
        document.getElementById("class").appendChild(para);
      }
+     function clickpress(params) {
+     var comp=  document.getElementById("field").value
+      $.get(`http://localhost:8080/company/queue?company_id=${comp}`, function(data, status){
+
+for (let index = 0; index < data.length; index++) {
+  console.log("QUEUE"+data[index].queue_id +"ACTIVE"+ data[index].is_active)
+  
+}
+  });
+     }
      </script>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- <div class="col">Column 3
       
         <body>
