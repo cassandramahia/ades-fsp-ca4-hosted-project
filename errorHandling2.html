@@ -116,7 +116,7 @@ function validateForm()  {
             <label for="hideinactive" > Hide inactive</label><br>
           </select>
           <br><br>
-          <button onclick="press()">Add another</button>
+       
 
         
     </div>
@@ -155,9 +155,8 @@ function validateForm()  {
         <br><br>
         </form>
         <div id="load" class="loader" style="display: none;"></div>
-        <!-- <form action="somefile.php">  -->
          
-      
+        <button onclick="press()">Add another</button>
       
         </body>
     </div>
@@ -165,9 +164,21 @@ function validateForm()  {
       function press(){
        var div = document.createElement("div");
      div.className="col";
-     var h1=document.createElement("h1");
-     h1.innerHTML="TEST";
+     var h1=document.createElement("h3");
+     h1.innerHTML="Company id";
+     var inout= document.createElement("input");
+     var button= document.createElement("button");
+     button.innerHTML="send";
+     button.setAttribute("onclick","submit()")
+     var label=document.createElement("label");
+     label.innerHTML="queueid";
+     var dropdown= document.createElement("select");
+     dropdown.id="drop";
      div.appendChild(h1);
+  
+     div.appendChild(inout);
+     div.appendChild(button);
+     div.appendChild(dropdown);
      document.getElementById("main").appendChild(div);
 
 
@@ -209,6 +220,12 @@ var a= document.createElement("a");
   a.innerHTML="check queue"
   var append= document.getElementById("form");
   append.appendChild(a);
+  console.log(document.getElementById("QueueId2"));
+   window.setInterval(function(){
+  /// call your function here
+  localStorage.setItem('label',document.getElementById("QueueId2").value)
+}, 1000);
+  
   });
      }
      function hide(params) {
