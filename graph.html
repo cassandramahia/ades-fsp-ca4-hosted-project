@@ -29,7 +29,7 @@ var updateChart = function (count) {
 var d = new Date();
 var tree= new Date(d.getTime() - 60000 *3);
 length = length || 1;
-    $.get(`http://localhost:8080/company/arrival_rate?queue_id=QUEUE01001&from=${tree.toISOString()}&duration=3`, 
+    $.get(`https://ades-2b04.herokuapp.com/company/arrival_rate?queue_id=QUEUE01001&from=${tree.toISOString()}&duration=3`, 
     function (data, status) {
 var final=[];
 for (let index = 0; index < data.length; index++) {

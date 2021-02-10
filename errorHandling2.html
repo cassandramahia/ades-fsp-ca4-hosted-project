@@ -3,6 +3,22 @@
 <head>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+
+    .loader {
+      border: 16px solid #f3f3f3; /* Light grey */
+      border-top: 16px solid #a6ff00; /* Blue */
+      border-radius: 50%;
+      width: 120px;
+      height: 120px;
+      animation: spin 2s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    </style>
 <script>
 
 
@@ -78,8 +94,8 @@ function validateForm()  {
     <div class="col">Column 1
       <body>
 
-        <h4>KOMPANY:</h4>
-        <input id="field" type="text" name="fname"  maxlength="10">
+        <h4>COMPANY:</h4>
+        <input type="text" name="fname"  maxlength="10">
         <button type="button" onclick="clickpress()">Click Me!</button>
         <form name="myForm" onsubmit="return validateForm()">
           CompanyId: <input type="text" name="fname" minlength="9" maxlength="9">
@@ -87,7 +103,7 @@ function validateForm()  {
           
           
         </form>
-        <div>Unknown CompanyId </div>
+        
         
         
         <form action="">
@@ -97,7 +113,7 @@ function validateForm()  {
             <option value="QueueId">QUEUE00002</option>
             <option value="QueueId">QUEUE00003</option>
             <input type="checkbox" id="hideinactive" name="hideinactive" value="hideinactive">
-            <label for="hideinactive"> Hide inactive</label><br>
+            <label for="hideinactive" > Hide inactive</label><br>
           </select>
           <br><br>
           <button onclick="press()">Add another</button>
@@ -107,35 +123,38 @@ function validateForm()  {
 
     <div class="col">Column 2
       
-      <form name="myForm" onsubmit="return validateForm()">
+      <form name="myForm">
         <input
+        id="field"
     type="text"
     name="fname"
     placeholder="CompanyId"
-    pattern="[1-9]{9}"
+    pattern="[0-9]{10}"
+    maxlength="10"
     title="ComapnyID should only contain in total nine numbers, does not allow symbols">
-        <input type="submit" value="Search">
+      
         
         
       </form>
+      <button type="button" onclick="submit()">Submit</button>
         
   
   
-      <div>Invalid CompanyId </div>
       
       
-      <form >
+      
+      <form id="form" >
         <label for="QueueId">QueueId:</label>
-        <select name="Queueid" id="QueueId">
-          <option value="QueueId">QUEUE00001</option>
+        <select name="Queueid" id="QueueId2">
+          <!-- <option value="QueueId">QUEUE00001</option>
           <option value="QueueId">QUEUE00002</option>
-          <option value="QueueId">QUEUE00003</option>
-          <input type="checkbox" id="hideinactive" name="hideinactive" value="hideinactive">
-          <label for="hideinactive"> Hide inactive</label><br>
+          <option value="QueueId">QUEUE00003</option> -->
+          <input type="checkbox" id="hide2" name="hideinactive" value="hideinactive" onclick="hide()">
+       <label  for="hideinactive" > Hide inactive</label><br>
         </select>
         <br><br>
         </form>
-      
+        <div id="load" class="loader" style="display: none;"></div>
         <!-- <form action="somefile.php">  -->
          
       
@@ -160,76 +179,61 @@ function validateForm()  {
        div.innerText = "This is a paragraph.";
        document.getElementById("class").appendChild(para);
      }
-     function clickpress(params) {
-     var comp=  document.getElementById("field").value
-      $.get(`http://localhost:8080/company/queue?company_id=${comp}`, function(data, status){
-
+     function submit(params) {
+     var comp=  document.getElementById("field").value;
+document.getElementById("load").style.display="inline-block";
+      $.get(`https://ades-2b04.herokuapp.com/company/queue?company_id=${comp}`, function(data, status){
+        document.getElementById("load").style.display="none";
 for (let index = 0; index < data.length; index++) {
-  console.log("QUEUE"+data[index].queue_id +"ACTIVE"+ data[index].is_active)
+
+  console.log("QUEUE"+data[index].queue_id +"ACTIVE"+ data[index].is_active);
+  var queue=data[index].queue_id;
+  var status =data[index].is_active;
+  var dropdown= document.createElement("option");
+  dropdown.innerHTML=queue;
+  dropdown.id=index;
+  dropdown.value=queue;
+  if(status==0){
+    dropdown.value="no";  
+    dropdown.innerHTML=queue+" not active";
+  }
+
+  var finalDrop=document.getElementById("QueueId2");
+  finalDrop.appendChild(dropdown);
+
   
 }
+var a= document.createElement("a");
+ // button.setAttribute("onclick", "window.location.href='./graph.html';");
+ a.href="graph.html"
+  a.innerHTML="check queue"
+  var append= document.getElementById("form");
+  append.appendChild(a);
   });
+     }
+     function hide(params) {
+       console.log("call");
+       var checkbox= document.getElementById("hide2");
+       var dropdownCount = document.getElementById("QueueId2").childElementCount;
+       if(checkbox.checked==true){
+for(i=0;i<dropdownCount;i++){
+  console.log(document.getElementById(i));
+  if(document.getElementById(i).value=="no"){
+    document.getElementById(i).style.display="none";
+  }
+}
+       }
+       else{
+        for(i=0;i<dropdownCount;i++){
+
+    document.getElementById(i).style.display="inline-block";
+  
+}
+
+       }
      }
      </script>
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <!-- <div class="col">Column 3
-      
-        <body>
-          <form name="myForm" onsubmit="return validateForm()">
-            <input
-        type="text"
-        name="fname"
-        placeholder="CompanyId"
-        pattern="[1-9]{9}"
-        title="ComapnyID should only contain in total nine numbers, does not allow symbols">
-            <input type="submit" value="Search">
-            
-            
-          </form>
-          <span>&#43;</span> <input type = "text" name = "fname" placeholder="add another">
-          <div>Unknown CompanyId </div>
-          
-          
-          <form action="/action_page.php">
-            <label for="QueueId">QueueId:</label>
-            <select name="Queueid" id="QueueId">
-              <option value="QueueId">QUEUE00001</option>
-              <option value="QueueId">QUEUE00002</option>
-              <option value="QueueId">QUEUE00003</option>
-              <input type="checkbox" id="hideinactive" name="hideinactive" value="hideinactive">
-              <label for="hideinactive"> Hide inactive</label><br>
-            </select>
-            <br><br>
-            </form>
-      </div>
-    </div>
-    <div class="col">Column 4</div>
-  </div>
-</div> -->
-
-<!-- <table style="width:100%"></table>
-<tr>
-
-
-
-</tr>
-
-  <form action="somefile.php"> 
-   
-  <tr> -->
-
-
-    <!-- <input type="text" name="CompanyId" placeholder="CompanyId" pattern="{1,15}"> -->
-
     
-   
 
-
-
-    
-<!-- </form>
-
-</tr>
-
-</body> -->
 </html>
