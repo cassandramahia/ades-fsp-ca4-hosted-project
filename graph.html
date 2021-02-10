@@ -3,11 +3,12 @@
 <head>
 <script>
 window.onload = function () {
-
+    var x=localStorage.getItem('label');
+console.log(x);
 var dps = []; // dataPoints
 var chart = new CanvasJS.Chart("chartContainer", {
 	title :{
-		text: "ARRIVAL RATE"
+		text: "ARRIVAL RATE "+x
     },
     axisX: {
         title: "Time"
@@ -28,8 +29,10 @@ var updateInterval = 1000;
 var updateChart = function (count) {
 var d = new Date();
 var tree= new Date(d.getTime() - 60000 *3);
+
+
 length = length || 1;
-    $.get(`https://ades-2b04.herokuapp.com/company/arrival_rate?queue_id=QUEUE01001&from=${tree.toISOString()}&duration=3`, 
+    $.get(`https://ades-2b04.herokuapp.com/company/arrival_rate?queue_id=${x}&from=${tree.toISOString()}&duration=3`, 
     function (data, status) {
 var final=[];
 for (let index = 0; index < data.length; index++) {
